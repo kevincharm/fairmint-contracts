@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "deploy:factory": "yarn hardhat --network mumbai run scripts/deploy-allowlister-factory.ts",
-    "test": "yarn hardhat test"
+    "deploy:factory": "yarn hardhat --network rinkeby run scripts/deploy-allowlister-factory.ts",
+    "test": "yarn hardhat --network hardhat test"
   },
   "keywords": [],
   "author": "",

@@ -107,7 +107,7 @@ contract Allowlister is IRandomiserCallback, Ownable {
         // TODO: Optimise math. Get number of required "buckets" of uint256 to s.t.
         // there is 1 bit available for each registered address.
         uint256 nBuckets = (nParticipants / 256) +
-            ((nParticipants * (nParticipants / 256)) < nParticipants ? 1 : 0);
+            ((256 * (nParticipants / 256)) < nParticipants ? 1 : 0);
         uint256[] memory winnersBitmap = new uint256[](nBuckets);
 
         for (uint256 i = 0; i < winnersToDraw; i++) {

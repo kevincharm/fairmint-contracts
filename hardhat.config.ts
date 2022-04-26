@@ -37,16 +37,16 @@ const config: HardhatUserConfig = {
         hardhat: {
             forking: {
                 enabled: true,
-                url: 'https://polygon-mumbai.g.alchemy.com/v2/b5XdcU7Wm5EWKN9FO4wrDVFa5KG_yYEH',
-                blockNumber: 26054737,
+                url: 'https://eth-rinkeby.alchemyapi.io/v2/sK3CQF-j7R_12rrKhMwpA4uBCFgbm-MQ',
+                blockNumber: 10572873,
             },
             accounts: {
-                count: 101,
+                count: 1001,
             },
         },
-        mumbai: {
-            url: 'https://polygon-mumbai.g.alchemy.com/v2/b5XdcU7Wm5EWKN9FO4wrDVFa5KG_yYEH',
-            chainId: 80001,
+        rinkeby: {
+            url: 'https://eth-rinkeby.alchemyapi.io/v2/sK3CQF-j7R_12rrKhMwpA4uBCFgbm-MQ',
+            chainId: 4,
             accounts: [process.env.MAINNET_PK as string],
         },
     },

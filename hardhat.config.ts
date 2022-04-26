@@ -41,7 +41,7 @@ const config: HardhatUserConfig = {
                 blockNumber: 10572873,
             },
             accounts: {
-                count: 1001,
+                count: 5001,
             },
         },
         rinkeby: {

@@ -1,42 +1,38 @@
 import { expect } from 'chai'
 import { ethers } from 'hardhat'
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
-import { Allowlister, Allowlister__factory } from '../typechain'
+import { Allowlister__factory } from '../typechain'
 import { BigNumber } from 'ethers'
-import assert from 'assert'
 
 const RAFFLE_ID = 1
 const RANDOM_SEED = BigNumber.from('69420')
 
+const deployAllowlister = async (deployer: SignerWithAddress, winnersToDraw: number) =>
+    new Allowlister__factory(deployer).deploy(
+        RAFFLE_ID,
+        'Oofbirds',
+        winnersToDraw,
+        /** Set deployer as randomiser so we can inject a random seed */
+        deployer.address,
+        ethers.constants.AddressZero,
+        ethers.constants.AddressZero
+    )
+
 describe('Allowlister', () => {
     let deployer: SignerWithAddress
-    let allowlister: Allowlister
     beforeEach(async () => {
         ;[deployer] = await ethers.getSigners()
-        // Deploy allowlister
-        allowlister = await new Allowlister__factory(deployer).deploy(
-            RAFFLE_ID,
-            'Oofbirds',
-            100,
-            /** Set deployer as randomiser so we can inject a random seed */
-            deployer.address,
-            ethers.constants.AddressZero,
-            ethers.constants.AddressZero
-        )
-        await allowlister.deployed()
     })
 
-    it('should perform raffle for 100 participants', async function () {
-        // Register 100 participants
-        const [, ...participants] = await ethers.getSigners()
-        assert(participants.length >= 100)
+    it('should pick 100 winners from 5000 participants', async function () {
+        const allowlister = await deployAllowlister(deployer, 100)
+        await allowlister.deployed()
 
+        // Register participants
+        const [, ...participants] = await ethers.getSigners()
         for (let i = 0; i < 100; i++) {
             const participant = participants[i]
             await allowlister.connect(participant).register()
-            // await expect()
-            //     .to.emit(allowlister, 'Registered')
-            //     .withArgs(RAFFLE_ID, participant.address, i)
         }
 
         // Inject initial random seed
@@ -60,17 +56,15 @@ describe('Allowlister', () => {
         expect(winners.length === participants.length)
     })
 
-    it('should perform raffle for 1000 participants', async function () {
-        // Register 100 participants
-        const [, ...participants] = await ethers.getSigners()
-        assert(participants.length >= 100)
+    it('should pick 1000 winners from 5000 participants', async function () {
+        const allowlister = await deployAllowlister(deployer, 1000)
+        await allowlister.deployed()
 
+        // Register participants
+        const [, ...participants] = await ethers.getSigners()
         for (let i = 0; i < 1000; i++) {
             const participant = participants[i]
             await allowlister.connect(participant).register()
-            // await expect()
-            //     .to.emit(allowlister, 'Registered')
-            //     .withArgs(RAFFLE_ID, participant.address, i)
         }
 
         // Inject initial random seed

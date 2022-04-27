@@ -104,10 +104,9 @@ contract Allowlister is IRandomiserCallback, Ownable {
         // This should be used as the dynamic length of `registeredAddresses`
         uint256 nParticipants = registeredAddresses.length;
 
-        // TODO: Optimise math. Get number of required "buckets" of uint256 to s.t.
+        // Get number of required "buckets" of uint256 to s.t.
         // there is 1 bit available for each registered address.
-        uint256 nBuckets = (nParticipants / 256) +
-            ((256 * (nParticipants / 256)) < nParticipants ? 1 : 0);
+        uint256 nBuckets = 1 + ((nParticipants - 1) / 256);
         uint256[] memory winnersBitmap = new uint256[](nBuckets);
 
         for (uint256 i = 0; i < winnersToDraw; i++) {
@@ -147,6 +146,20 @@ contract Allowlister is IRandomiserCallback, Ownable {
         //         winnersModule.award(winner);
         //     }
         // }
+    }
+
+    /**
+     * @notice Returns true if `participant` was a raffle winner
+     * @param participant Raffle participant's address
+     */
+    function isWinner(address participant) external view returns (bool) {
+        require(s_isRaffleFinished, "Raffle not finished");
+        Registration storage registration = s_registrations[participant];
+        require(registration.isRegistered, "Not a raffle participant");
+
+        uint256 bucketIndex = registration.index / 256;
+        uint8 bit = uint8(registration.index % 256);
+        return ((s_winnersBitmap[bucketIndex] >> bit) & 1) == 1;
     }
 
     // This is currently ~214303 gas

@@ -86,5 +86,5 @@ describe('Allowlister', () => {
         // Since we are drawing 100 winners from a pool of 100, the set of winners
         // and participants should be equivalent.
         expect(winners.length === participants.length)
-    })
+    }).timeout(60_000)
 })
